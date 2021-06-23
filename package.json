@@ -33,6 +33,7 @@
     "react-native-safe-area-context": "^3.2.0",
     "react-native-screens": "^3.4.0",
     "react-native-vector-icons": "^8.1.0",
+    "react-query": "^3.17.2",
     "react-redux": "^7.2.4",
     "redux": "^4.1.0",
     "redux-saga": "^1.1.3",
