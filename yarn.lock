@@ -1604,6 +1604,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-navigation/stack@npm:^5.14.5":
+  version: 5.14.5
+  resolution: "@react-navigation/stack@npm:5.14.5"
+  dependencies:
+    color: ^3.1.3
+    react-native-iphone-x-helper: ^1.3.0
+  peerDependencies:
+    "@react-native-community/masked-view": ">= 0.1.0"
+    "@react-navigation/native": ^5.0.5
+    react: "*"
+    react-native: "*"
+    react-native-gesture-handler: ">= 1.0.0"
+    react-native-safe-area-context: ">= 0.6.0"
+    react-native-screens: ">= 2.0.0-alpha.0 || >= 2.0.0-beta.0 || >= 2.0.0"
+  checksum: 412b5756e804ca99cded387791630631d5d531b1c3268f1a7b46aeb78344150eedad0f09783cb5f76128e18ca057432d3f2dc4fe47a2fcdab523e4ee8ab2bb03
+  languageName: node
+  linkType: hard
+
 "@redux-saga/core@npm:^1.1.3":
   version: 1.1.3
   resolution: "@redux-saga/core@npm:1.1.3"
@@ -8499,6 +8517,7 @@ fsevents@^2.1.2:
     "@react-native-community/masked-view": ^0.1.11
     "@react-navigation/bottom-tabs": ^5.11.11
     "@react-navigation/native": ^5.9.4
+    "@react-navigation/stack": ^5.14.5
     "@types/jest": ^26.0.23
     "@types/react": ^17.0.11
     "@types/react-native": ^0.64.5
