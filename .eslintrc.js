@@ -20,5 +20,6 @@ module.exports = {
     'react-native/no-single-element-style-arrays': 2,
     'simple-import-sort/imports': 2,
     'simple-import-sort/exports': 2,
+    '@typescript-eslint/ban-ts-comment': 0,
   },
 }
