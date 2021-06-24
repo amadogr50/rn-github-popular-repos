@@ -1,8 +1,11 @@
 import React, { useCallback, useMemo } from 'react'
-import { FlatList, Text, View } from 'react-native'
+import { FlatList, StyleSheet, Text, View } from 'react-native'
 import { QueryFunctionContext, useInfiniteQuery } from 'react-query'
 
 import GithubApi from '../apis/github-api'
+import Layout from '../components/layout'
+import RepositoryItem from '../components/repository-item'
+import VerticalDivider from '../components/vertical-divider'
 import { Repository, SearchResponse } from '../types'
 
 const TrendingScreen = (): JSX.Element => {
@@ -22,11 +25,7 @@ const TrendingScreen = (): JSX.Element => {
   )
 
   const renderItem = useCallback(
-    () => (
-      <View>
-        <Text>Hola</Text>
-      </View>
-    ),
+    ({ item }) => <RepositoryItem style={styles.item} repository={item} />,
     [],
   )
 
@@ -46,7 +45,7 @@ const TrendingScreen = (): JSX.Element => {
   }, [data])
 
   return (
-    <View>
+    <Layout>
       {isLoading ? (
         <View>
           <Text>Loading...</Text>
@@ -61,10 +60,15 @@ const TrendingScreen = (): JSX.Element => {
           renderItem={renderItem}
           onEndReached={onEndReached}
           showsVerticalScrollIndicator={false}
+          ItemSeparatorComponent={VerticalDivider}
         />
       )}
-    </View>
+    </Layout>
   )
 }
+
+const styles = StyleSheet.create({
+  item: {},
+})
 
 export default TrendingScreen

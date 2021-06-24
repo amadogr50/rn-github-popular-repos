@@ -14,4 +14,5 @@ export type Repository = {
 
 export type RepositoryOwner = {
   login: string
+  avatar_url: string
 }
