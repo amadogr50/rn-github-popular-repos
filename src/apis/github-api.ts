@@ -18,13 +18,17 @@ class GithubApi extends HttpClient {
     return this.classInstance
   }
 
-  getTrending = (page: number): Promise<AxiosResponse<SearchResponse>> =>
-    this.instance.request<SearchResponse>({
-      url: 'search/repositories?q=created:>2017-10-22&sort=stars&order=desc',
-      params: {
-        page,
-      },
-    })
+  getTrending = (page: number): Promise<SearchResponse> =>
+    this.instance
+      .get<SearchResponse>(
+        'search/repositories?q=created:>2017-10-22&sort=stars&order=desc',
+        {
+          params: {
+            page,
+          },
+        },
+      )
+      .then((response: AxiosResponse) => response.data)
 }
 
 export default GithubApi

@@ -1,10 +1,10 @@
 export type SearchResponse = {
   total_count: number
   incomplete_result: boolean
-  items: Index[]
+  items: Repository[]
 }
 
-export type Index = {
+export type Repository = {
   id: number
   name: string
   description: string

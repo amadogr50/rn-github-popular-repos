@@ -11,14 +11,11 @@ abstract class HttpClient {
     this._initializeResponseInterceptor()
   }
 
-  private _initializeResponseInterceptor = () => {
-    this.instance.interceptors.response.use(
-      this._handleResponse,
-      this._handleError,
-    )
-  }
+  private _initializeResponseInterceptor = () => {}
 
-  private _handleResponse = ({ data }: AxiosResponse) => data
+  private _handleResponse = ({ data }: AxiosResponse) => {
+    return data
+  }
 
   protected _handleError = (error: any) => Promise.reject(error)
 }

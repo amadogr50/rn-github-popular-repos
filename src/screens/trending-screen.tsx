@@ -1,19 +1,49 @@
-import React, { useState } from 'react'
-import { Text, View } from 'react-native'
-import { useQuery } from 'react-query'
+import React, { useCallback, useMemo } from 'react'
+import { FlatList, Text, View } from 'react-native'
+import { QueryFunctionContext, useInfiniteQuery } from 'react-query'
 
 import GithubApi from '../apis/github-api'
+import { Repository, SearchResponse } from '../types'
 
 const TrendingScreen = (): JSX.Element => {
-  const [page, setPage] = useState(0)
+  const getTrending = useCallback(
+    ({ pageParam = 0 }: QueryFunctionContext<'trending-repositories'>) =>
+      GithubApi.getInstance().getTrending(pageParam),
+    [],
+  )
 
-  const { isLoading, isError, data } = useQuery(
-    ['trending-repositories', page],
-    () => GithubApi.getInstance().getTrending(page),
+  const { isLoading, isError, data, fetchNextPage } = useInfiniteQuery(
+    'trending-repositories',
+    getTrending,
     {
+      getNextPageParam: (lastPage) => lastPage.incomplete_result,
       keepPreviousData: true,
     },
   )
+
+  const renderItem = useCallback(
+    () => (
+      <View>
+        <Text>Hola</Text>
+      </View>
+    ),
+    [],
+  )
+
+  const onEndReached = useCallback(() => {
+    fetchNextPage()
+  }, [fetchNextPage])
+
+  const realData: Repository[] = useMemo(() => {
+    return data
+      ? data.pages.reduce(
+          (repositories: Repository[], currentPage: SearchResponse) => {
+            return [...repositories, ...currentPage.items]
+          },
+          [],
+        )
+      : []
+  }, [data])
 
   return (
     <View>
@@ -26,9 +56,12 @@ const TrendingScreen = (): JSX.Element => {
           <Text>Error...</Text>
         </View>
       ) : (
-        <View>
-          <Text>Data...</Text>
-        </View>
+        <FlatList
+          data={realData}
+          renderItem={renderItem}
+          onEndReached={onEndReached}
+          showsVerticalScrollIndicator={false}
+        />
       )}
     </View>
   )
