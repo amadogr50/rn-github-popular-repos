@@ -1,6 +1,8 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
+import Colors from '../theme/colors'
+
 const VerticalDivider = (): JSX.Element => {
   return <View style={styles.divider} />
 }
@@ -8,7 +10,7 @@ const VerticalDivider = (): JSX.Element => {
 const styles = StyleSheet.create({
   divider: {
     height: 2,
-    backgroundColor: 'lightgray',
+    backgroundColor: Colors.divider,
   },
 })
 

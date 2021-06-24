@@ -4,7 +4,11 @@ import * as RNFS from 'react-native-fs'
 // @ts-ignore
 import * as shorthash from 'shorthash'
 
-const useImageCaching = (remoteUri: string) => {
+const useImageCaching = (
+  remoteUri: string,
+): {
+  source: ImageSourcePropType | null
+} => {
   const [source, setSource] = useState<ImageSourcePropType | null>(null)
 
   useEffect(() => {
