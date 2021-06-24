@@ -1,25 +1,33 @@
+import dayjs from 'dayjs'
 import React, { useCallback, useMemo } from 'react'
-import { FlatList, StyleSheet, Text, View } from 'react-native'
-import { QueryFunctionContext, useInfiniteQuery } from 'react-query'
+import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native'
+import SimpleToast from 'react-native-simple-toast'
+import { useInfiniteQuery } from 'react-query'
 
 import GithubApi from '../apis/github-api'
 import Layout from '../components/layout'
 import RepositoryItem from '../components/repository-item'
 import VerticalDivider from '../components/vertical-divider'
+import Colors from '../theme/colors'
+import Dimensions from '../theme/dimensions'
 import { Repository, SearchResponse } from '../types'
 
 const TrendingScreen = (): JSX.Element => {
-  const getTrending = useCallback(
-    ({ pageParam = 0 }: QueryFunctionContext<'trending-repositories'>) =>
-      GithubApi.getInstance().getTrending(pageParam),
-    [],
-  )
-
-  const { isLoading, isError, data, fetchNextPage } = useInfiniteQuery(
-    'trending-repositories',
-    getTrending,
+  const { isFetching, data, fetchNextPage } = useInfiniteQuery(
+    [`trending-repositories`, dayjs().format('YYYY-MM-DD')],
+    ({ pageParam = 1 }) => {
+      return GithubApi.getInstance().getTrending({
+        todayDate: dayjs(),
+        page: pageParam,
+      })
+    },
     {
-      getNextPageParam: (lastPage) => lastPage.incomplete_result,
+      onError: (err: { message: string }) => {
+        SimpleToast.show(err.message)
+      },
+      getNextPageParam: (lastPage, allPages) => {
+        return !lastPage.incomplete_result ? allPages.length + 2 : undefined
+      },
       keepPreviousData: true,
     },
   )
@@ -32,6 +40,10 @@ const TrendingScreen = (): JSX.Element => {
   const onEndReached = useCallback(() => {
     fetchNextPage()
   }, [fetchNextPage])
+
+  const keyExtractor = useCallback((item: Repository) => {
+    return `${item.id}-${item.node_id}`
+  }, [])
 
   const realData: Repository[] = useMemo(() => {
     return data
@@ -46,28 +58,31 @@ const TrendingScreen = (): JSX.Element => {
 
   return (
     <Layout>
-      {isLoading ? (
-        <View>
-          <Text>Loading...</Text>
+      <FlatList
+        data={realData}
+        renderItem={renderItem}
+        onEndReached={onEndReached}
+        showsVerticalScrollIndicator={false}
+        ItemSeparatorComponent={VerticalDivider}
+        keyExtractor={keyExtractor}
+      />
+      {isFetching && (
+        <View style={styles.loadingIndicatorContainer}>
+          <ActivityIndicator size="large" color={Colors.primary} />
         </View>
-      ) : isError ? (
-        <View>
-          <Text>Error...</Text>
-        </View>
-      ) : (
-        <FlatList
-          data={realData}
-          renderItem={renderItem}
-          onEndReached={onEndReached}
-          showsVerticalScrollIndicator={false}
-          ItemSeparatorComponent={VerticalDivider}
-        />
       )}
     </Layout>
   )
 }
 
 const styles = StyleSheet.create({
+  loadingIndicatorContainer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    padding: Dimensions.m,
+  },
   item: {},
 })
 

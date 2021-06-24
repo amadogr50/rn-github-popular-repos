@@ -4,8 +4,13 @@ export type SearchResponse = {
   items: Repository[]
 }
 
+export type ErrorResponse = {
+  message: string
+}
+
 export type Repository = {
   id: number
+  node_id: string
   name: string
   description: string
   owner: RepositoryOwner

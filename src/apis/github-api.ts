@@ -1,6 +1,8 @@
 import { AxiosResponse } from 'axios'
+import dayjs from 'dayjs'
+import reactotron from 'reactotron-react-native'
 
-import { SearchResponse } from '../types'
+import { ErrorResponse, SearchResponse } from '../types'
 import HttpClient from './http-client'
 
 class GithubApi extends HttpClient {
@@ -18,10 +20,18 @@ class GithubApi extends HttpClient {
     return this.classInstance
   }
 
-  getTrending = (page: number): Promise<SearchResponse> =>
-    this.instance
+  getTrending = ({
+    todayDate,
+    page,
+  }: {
+    todayDate: dayjs.Dayjs
+    page: number
+  }): Promise<SearchResponse> => {
+    const oneMonthBefore = todayDate.subtract(30, 'day').format('YYYY-MM-DD')
+
+    return this.instance
       .get<SearchResponse>(
-        'search/repositories?q=created:>2017-10-22&sort=stars&order=desc',
+        `search/repositories?q=created:>${oneMonthBefore}&sort=stars&order=desc`,
         {
           params: {
             page,
@@ -29,6 +39,10 @@ class GithubApi extends HttpClient {
         },
       )
       .then((response: AxiosResponse) => response.data)
+      .catch((error: { message: string }) => {
+        return Promise.reject(error)
+      })
+  }
 }
 
 export default GithubApi
